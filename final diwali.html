@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Diwali Special</title>
+    <style>
+        :root{
+            --card-bg: #f5f539;
+            --page-bg: #99b9f5;
+            --btn-bg-start: #ff874d;
+            --btn-bg-end: #ffd24d;
+            --btn-color: #2b1f00;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+
+        /* Card / container */
+        .card {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
+            width: min(90%, 800px);
+            max-width: 800px;
+            min-height: 380px;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            margin: 60px auto;
+            box-shadow: 0px 5px 15px 3px rgb(80, 76, 55);
+            animation: pulse-animation 2s infinite;
+            padding: 18px;
+            box-sizing: border-box;
+        }
+
+        /* Pulse animation for the card */
+        @keyframes pulse-animation {
+            0% {
+                transform: scale(1);
+                box-shadow: 0px 5px 15px 3px rgb(80, 76, 55);
+            }
+            50% {
+                transform: scale(1.01);
+                box-shadow: 10px 10px 30px 5px rgba(0,0,0,0.18);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0px 5px 15px 3px rgb(80, 76, 55);
+            }
+        }
+
+        p {
+            margin: 0;
+            padding: 10px 20px;
+            text-align: center;
+            line-height: 1.45;
+            width: 100%;
+        }
+
+        /* Bulb container: the yellow box area where bulb image appears */
+        .bulb-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 520px;
+            height: auto;
+            padding: 18px;
+            box-sizing: border-box;
+            transition: transform 220ms ease;
+            border-radius: 14px;
+        }
+
+        /* Responsive image */
+        .bulb-container img {
+            display: block;
+            max-width: 360px;
+            width: 60%;
+            height: auto;
+            transition: filter 300ms ease, transform 300ms ease;
+            will-change: transform, filter;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* Glow effect (radial) - created using pseudo element so it doesn't block clicks */
+        .bulb-container::after{
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%) scale(0.9);
+            width: 260%;
+            height: 260%;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255,255,200,0.95), rgba(255,220,90,0.45) 30%, rgba(255,200,40,0.18) 50%, transparent 60%);
+            opacity: 0;
+            filter: blur(28px);
+            transition: opacity 360ms ease, transform 500ms ease;
+            pointer-events: none;
+        }
+
+        /* When ON -> show glow and subtle pulse */
+        .bulb-container.on::after{
+            opacity: 1;
+            animation: glow-pulse 2.4s infinite ease-in-out;
+            transform: translate(-50%,-50%) scale(1);
+        }
+
+        @keyframes glow-pulse {
+            0% { transform: translate(-50%,-50%) scale(0.96); opacity: 0.88; }
+            50% { transform: translate(-50%,-50%) scale(1.06); opacity: 1; }
+            100% { transform: translate(-50%,-50%) scale(0.96); opacity: 0.88; }
+        }
+
+        /* Subtle incandescent flicker for realism while ON */
+        @keyframes flicker {
+            0% { filter: brightness(1.00) saturate(1); }
+            8% { filter: brightness(1.10) saturate(1.06); }
+            18% { filter: brightness(0.95) saturate(0.98); }
+            28% { filter: brightness(1.08) saturate(1.05); }
+            40% { filter: brightness(0.99) saturate(1); }
+            100% { filter: brightness(1.00) saturate(1); }
+        }
+
+        .bulb-container.on img {
+            transform: translateY(-2px);
+            animation: flicker 1.8s infinite;
+        }
+
+        /* OFF state: cooler and a little translucent */
+        .bulb-container.off img {
+            filter: grayscale(0.15) contrast(0.9) brightness(0.85);
+            transform: translateY(0);
+        }
+
+        /* Button base styles */
+        .magic-btn {
+            --btn-bg: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end));
+            background: var(--btn-bg);
+            color: var(--btn-color);
+            border: none;
+            border-radius: 14px;
+            padding: 12px 28px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms ease, filter 220ms ease;
+            transform-origin: center;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .magic-btn:focus { outline: 3px solid rgba(0,0,0,0.08); outline-offset: 4px; }
+
+        /* Hover/focus states (fallback for devices without JS cursor tracking) */
+        .magic-btn:hover,
+        .magic-btn:focus {
+            transform: scale(1.05);
+            filter: brightness(1.03);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+            outline: none;
+        }
+
+        /* Small decorative floating animation on the button */
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+            100% { transform: translateY(0); }
+        }
+        .magic-btn.animate-floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            background: rgba(255,255,255,0.6);
+            pointer-events: none;
+            animation: ripple-effect 600ms linear;
+        }
+        @keyframes ripple-effect {
+            to {
+                transform: scale(6);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 480px) {
+            p { padding: 14px 12px; }
+            .magic-btn { padding: 10px 18px; font-size: 0.95rem; }
+            .card { min-height: 320px; margin: 30px 10px; }
+            .bulb-container img { width: 72%; max-width: 260px; }
+        }
+
+        /* Improve accessibility when user prefers reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .card { animation: none; }
+            .magic-btn.animate-floating { animation: none; }
+            .magic-btn, .card, .bulb-container::after, .bulb-container img { transition: none; animation: none; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="card" id="card">
+        <p>Click the button to switch the bulb. When ON a warm glowing bulb appears inside the yellow box; when OFF a cool / dim bulb is shown.</p>
+
+        <div class="bulb-container off" id="bulbBox" aria-live="polite" aria-atomic="true">
+            <!--
+                Place the two images in the same folder as this HTML file:
+                - bulb-on.jpg  (the bright/yellow bulb)
+                - bulb-off.jpg (the dim/blue bulb)
+                If you want to use different filenames or remote URLs, update the JavaScript below.
+            -->
+            <img id="bulbImg" src="bulb-off.jpg" alt="Bulb is off" draggable="false" />
+        </div>
+
+        <button class="magic-btn animate-floating" aria-pressed="false" id="toggleBtn" aria-label="Toggle bulb">
+            Turn on
+        </button>
+    </div>
+
+    <script>
+        (function () {
+            const btn = document.getElementById('toggleBtn');
+            const bulbImg = document.getElementById('bulbImg');
+            const bulbBox = document.getElementById('bulbBox');
+
+            // Update these if your filenames/paths differ
+            const ON_SRC = 'bulb-on.jpg';
+            const OFF_SRC = 'bulb-off.jpg';
+
+            // Preload images for a smooth swap
+            [ON_SRC, OFF_SRC].forEach(src => {
+                const i = new Image();
+                i.src = src;
+            });
+
+            // State
+            let isOn = false;
+
+            // Update UI based on state
+            function updateUI() {
+                if (isOn) {
+                    bulbImg.src = ON_SRC;
+                    bulbImg.alt = 'Bulb is on';
+                    bulbBox.classList.add('on');
+                    bulbBox.classList.remove('off');
+                    btn.textContent = 'Turn off';
+                    btn.setAttribute('aria-pressed', 'true');
+                    // add a little emphasis to the card when on
+                    document.getElementById('card').style.boxShadow = '0 18px 50px rgba(255,170,20,0.18)';
+                } else {
+                    bulbImg.src = OFF_SRC;
+                    bulbImg.alt = 'Bulb is off';
+                    bulbBox.classList.remove('on');
+                    bulbBox.classList.add('off');
+                    btn.textContent = 'Turn on';
+                    btn.setAttribute('aria-pressed', 'false');
+                    document.getElementById('card').style.boxShadow = '';
+                }
+            }
+
+            // Initial UI
+            updateUI();
+
+            // Click toggles the bulb
+            btn.addEventListener('click', function (e) {
+                isOn = !isOn;
+                updateUI();
+
+                // ripple effect at click location
+                const rect = btn.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                btn.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove());
+            });
+
+            // Keep original pointer magnetic behavior on the button (optional / subtle)
+            (function attachMagnetic() {
+                const sensitivity = 14;
+                btn.addEventListener('pointermove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const relX = e.clientX - rect.left;
+                    const relY = e.clientY - rect.top;
+                    const offsetX = (relX - rect.width / 2) / rect.width * sensitivity;
+                    const offsetY = (relY - rect.height / 2) / rect.height * sensitivity;
+                    btn.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(1.03)`;
+                    btn.style.boxShadow = `${-offsetX}px ${Math.abs(offsetY) + 6}px 30px rgba(0,0,0,0.32)`;
+                });
+                btn.addEventListener('pointerleave', () => {
+                    btn.style.transform = '';
+                    btn.style.boxShadow = '';
+                });
+                btn.addEventListener('pointerenter', () => {
+                    btn.style.transition = 'transform 160ms cubic-bezier(.2,.9,.3,1), box-shadow 160ms ease';
+                });
+            })();
+
+            // Allow keyboard toggling via Space / Enter when button focused (native button handles it,
+            // but ensure visual updates in case of custom triggers)
+            btn.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' || e.code === 'Enter') {
+                    // don't duplicate default behavior, just ensure state is in sync afterwards
+                    // small timeout so the click handler runs first (native)
+                    setTimeout(updateUI, 10);
+                }
+            });
+
+            // Optional: allow clicking the bulb image to toggle as well
+            bulbImg.parentElement.addEventListener('click', () => {
+                isOn = !isOn;
+                updateUI();
+            });
+
+            // Respect user's reduced-motion preference
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+            function applyMotionPreference() {
+                if (reduceMotion.matches) {
+                    // disable animations by removing animated classes
+                    document.querySelectorAll('.animate-floating').forEach(n => n.classList.remove('animate-floating'));
+                }
+            }
+            reduceMotion.addEventListener ? reduceMotion.addEventListener('change', applyMotionPreference) : reduceMotion.addListener(applyMotionPreference);
+            applyMotionPreference();
+
+        })();
+    </script>
+</body>
+</html>
